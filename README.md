@@ -1,2 +1,2 @@
 # Graphics
-Computer Graphics Programs
+Computer_Graphics_Programs
