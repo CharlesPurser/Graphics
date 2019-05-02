@@ -34,8 +34,6 @@ class cl_widgets :
     self.euler.set(False)
     self.angle = [0.0, 0.0, 0.0]
 
-    self.bezier = tk.BooleanVar()
-    self.bezier.set(False)
     self.res = 4
 
     self.menu = cl_menu( self )
@@ -154,8 +152,7 @@ class cl_menu :
     dummy.add_checkbutton( label = 'Clip', onvalue = 1, offvalue = False, variable = self.master.var)
     dummy.add_checkbutton( label = 'Perspective', onvalue = 1, offvalue = False, variable = self.master.per )
     dummy.add_checkbutton( label = 'Euler', onvalue = 1, offvalue = False, variable = self.master.euler )
-    dummy.add_checkbutton( label = 'Bezier', onvalue = 1, offvalue = False, variable = self.master.bezier )
-
+    
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Help', menu = dummy )
     dummy.add_command( label = 'About...', command = lambda : self.menu_callback( 'help>about' ) )
@@ -228,11 +225,11 @@ class cl_toolbar :
     w = self.master.m_ModelData.getWindow()
     v = self.master.m_ModelData.getViewport()
     d = self.master.dist
-
+    r = self.master.res
+    angles = self.master.angle    
     ( ax, ay, sx, sy ) = constructTransform( w, v, width, height )
 
     self.master.m_ModelData.specifyTransform( ax, ay, sx, sy, d )
-    angles = self.master.angle
     self.master.m_ModelData.specifyEuler( angles[0], angles[1], angles[2] )
 
     print(  '---Draw' )
@@ -247,9 +244,9 @@ class cl_toolbar :
     vyMax = v[3] * height
     self.master.ob_canvas_frame.canvas.create_line(
       vxMin, vyMin, vxMin, vyMax, vxMax, vyMax, vxMax, vyMin, vxMin, vyMin )   
-
+    
     doPerspective = self.master.per.get()
-    self.master.ob_world.create_graphic_objects( self.master.ob_canvas_frame.canvas, self.master.m_ModelData, doClip, doPerspective, doEuler )
+    self.master.ob_world.create_graphic_objects( self.master.ob_canvas_frame.canvas, self.master.m_ModelData, doClip, doPerspective, doEuler, r )
 
     self.master.statusBar_frame.set( 'Draw callback' )
 
@@ -272,6 +269,6 @@ class cl_toolbar :
     if( self.master.res == None ) : 
       self.master.statusBar_frame.set( "%s", 'Set Resolution Cancelled')
     else : 
-      self.master.statusBar_frame.set('Resolition = %s', str(self.master.res) )
+      self.master.statusBar_frame.set("%s", 'Resolition = ' + str(self.master.res) )
 
 #----------------------------------------------------------------------
